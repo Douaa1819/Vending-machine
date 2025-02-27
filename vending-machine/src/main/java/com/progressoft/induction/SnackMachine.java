@@ -38,5 +38,46 @@ public class SnackMachine {
         return chocolates;
     }
 
+    public void insertMoney(Money money) {
+        if (money == null) {
+            throw new IllegalArgumentException("Money cannot be null");
+        }
+        if (!(money.equals(Money.QUARTER_DINAR) ||
+                money.equals(Money.HALF_DINAR) ||
+                money.equals(Money.DINAR) ||
+                money.equals(Money.FIVE_DINAR) ||
+                money.equals(Money.TEN_DINAR))) {
+            throw new IllegalArgumentException("Unsupported money unit");
+        }
+        moneyInTransaction = moneyInTransaction.add(money);
+    }
 
+
+    public Money buySnack(SnackType snackType) {
+        Snack snack;
+        switch (snackType) {
+            case CHEWING_GUM:
+                snack = chewingGums;
+                break;
+            case CHIPS:
+                snack = chips;
+                break;
+            case CHOCOLATE:
+                snack = chocolates;
+                break;
+            default:
+                throw new IllegalArgumentException("Snack not found");
+        }
+        if (snack.quantity() <= 0) {
+            throw new IllegalStateException("Snack is not available");
+        }
+        if (moneyInTransaction().isLessThan(snack.price())) {
+            throw new IllegalStateException("Insufficient money inserted");
+        }
+        snack.dispense();
+        Money change = moneyInTransaction.subtract(snack.price());
+        moneyInside = moneyInside.add(snack.price());
+        moneyInTransaction = Money.ZERO;
+        return change;
+    }
 }
