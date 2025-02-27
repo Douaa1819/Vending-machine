@@ -42,6 +42,7 @@ public class SnackMachine {
         if (money == null) {
             throw new IllegalArgumentException("Money cannot be null");
         }
+        
         if (!(money.equals(Money.QUARTER_DINAR) ||
                 money.equals(Money.HALF_DINAR) ||
                 money.equals(Money.DINAR) ||
